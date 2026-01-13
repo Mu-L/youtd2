@@ -242,6 +242,10 @@ func get_tower_ability_text_short(tower_id: int) -> String:
 
 	var aura_id_list: Array = TowerProperties.get_aura_id_list(tower_id)
 	for aura_id in aura_id_list:
+		var aura_is_hidden: bool = AuraProperties.get_is_hidden(aura_id)
+		if aura_is_hidden:
+			continue
+
 		var aura_text: String = get_aura_text_short(aura_id)
 		text += aura_text \
 		+ " \n"
@@ -318,6 +322,10 @@ func get_item_text(item: Item) -> String:
 
 	var aura_id_list: Array = ItemProperties.get_aura_id_list(item_id)
 	for aura_id in aura_id_list:
+		var aura_is_hidden: bool = AuraProperties.get_is_hidden(aura_id)
+		if aura_is_hidden:
+			continue
+
 		var aura_text: String = get_aura_text_short(aura_id)
 		text += aura_text \
 		+ " \n"
