@@ -400,7 +400,15 @@ func _on_peer_connected(_peer_id: int):
 		var team_mode: TeamMode.enm = _current_match_config.get_team_mode()
 		var origin_seed: int = randi()
 
-		_title_screen.start_game.rpc(PlayerMode.enm.MULTIPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.NAKAMA)
+#		NOTE: build the authoritative peer list on the host
+#		(peer 1) and pass it to all clients, so every client
+#		sets up an identical player roster regardless of
+#		peer-discovery timing. See Globals._game_peer_id_list.
+		peer_id_list = [1]
+		peer_id_list.append_array(multiplayer.get_peers())
+		peer_id_list.sort()
+
+		_title_screen.start_game.rpc(PlayerMode.enm.MULTIPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.NAKAMA, peer_id_list)
 
 
 func _on_host_created_game_match(game_match_id: String):

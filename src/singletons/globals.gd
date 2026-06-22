@@ -18,6 +18,10 @@ var _game_mode: GameMode.enm = GameMode.enm.BUILD
 var _difficulty: Difficulty.enm = Difficulty.enm.EASY
 var _team_mode: TeamMode.enm = TeamMode.enm.ONE_PLAYER_PER_TEAM
 var _origin_seed: int = 0
+# NOTE: authoritative, host-provided list of peer id's for the
+# current game. Used instead of multiplayer.get_peers() when
+# setting up players
+var _game_peer_id_list: Array = []
 var _update_ticks_per_physics_tick: int = 1
 var _connection_type: ConnectionType = ConnectionType.ENET
 var _enet_peer_id_to_player_name: Dictionary = {}
@@ -76,6 +80,10 @@ func get_origin_seed() -> int:
 	return _origin_seed
 
 
+func get_game_peer_id_list() -> Array:
+	return _game_peer_id_list
+
+
 func game_mode_is_random() -> bool:
 	return Globals.get_game_mode() == GameMode.enm.RANDOM_WITH_UPGRADES || Globals.get_game_mode() == GameMode.enm.TOTALLY_RANDOM
 
@@ -120,4 +128,3 @@ func get_title_screen_notification_list() -> Array[String]:
 
 func clear_title_screen_notification_list():
 	_title_screen_notification_list.clear()
-
