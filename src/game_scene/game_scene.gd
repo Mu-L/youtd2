@@ -100,8 +100,11 @@ func _ready():
 # 	Save the seed which host gave to this client so that rng
 # 	on this game client is the same as on all other clients.
 	Globals.synced_rng.set_seed(origin_seed)
-	
+
 	print_verbose("Origin seed to: ", origin_seed)
+
+#	NOTE: ensure object UID counters are statically reset between sessions
+	_reset_uid_counters()
 
 	_setup_players()
 	PlayerManager.send_players_created_signal()
@@ -280,16 +283,23 @@ func _save_player_exp_on_quit():
 	local_team.convert_local_player_score_to_exp()
 
 
-func _setup_players():
-	var peer_id_list: Array[int] = []
-	var local_peer_id: int = multiplayer.get_unique_id()
-	peer_id_list.append(local_peer_id)
-	var remote_peer_id_list: PackedInt32Array = multiplayer.get_peers()
-	for peer_id in remote_peer_id_list:
-		peer_id_list.append(peer_id)
+func _reset_uid_counters():
+	Unit._uid_max = 1
+	Item._uid_max = 1
+	Autocast._uid_max = 1
+	ItemContainer._uid_max = 1
+	Projectile._uid_max = 1
+	ManualTimer._uid_max = 1
 
-#	NOTE: create players in the order of peer id's to ensure determinism
-	peer_id_list.sort()
+
+func _setup_players():
+#	NOTE: use the authoritative peer list provided by the host
+#	instead of multiplayer.get_peers().
+#	 See Globals._game_peer_id_list.
+	var peer_id_list: Array[int] = []
+	peer_id_list.assign(Globals.get_game_peer_id_list())
+
+	print_verbose("[desync-debug] _setup_players peer_id_list=%s (local peer %d)" % [str(peer_id_list), multiplayer.get_unique_id()])
 	
 #	Create teams
 	var team_mode: TeamMode.enm = Globals.get_team_mode()

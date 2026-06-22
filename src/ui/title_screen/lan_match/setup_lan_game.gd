@@ -198,8 +198,14 @@ func _on_lan_lobby_menu_start_pressed():
 	var game_mode: GameMode.enm = _current_match_config.get_game_mode()
 	var team_mode: TeamMode.enm = _current_match_config.get_team_mode()
 	var origin_seed: int = randi()
-	
-	_title_screen.start_game.rpc(PlayerMode.enm.MULTIPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.ENET)
+
+#	NOTE: build the authoritative peer list on the host (peer
+#	1) and pass it to all clients.
+	var peer_id_list: Array = [1]
+	peer_id_list.append_array(multiplayer.get_peers())
+	peer_id_list.sort()
+
+	_title_screen.start_game.rpc(PlayerMode.enm.MULTIPLAYER, game_length, game_mode, difficulty, team_mode, origin_seed, Globals.ConnectionType.ENET, peer_id_list)
 
 
 func _on_lan_connect_menu_join_pressed():
