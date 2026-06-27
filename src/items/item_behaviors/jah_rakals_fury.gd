@@ -15,7 +15,7 @@ func item_init():
 
 
 func on_attack(event: Event):
-	if item.user_int == event.get_target().get_instance_id():
+	if item.user_int == event.get_target().get_uid():
 # 		100% attack speed limit
 		if item.user_real != 1.00 && item.user_real + 0.02 > 1.00:
 #			Add the remaining bonus (99% -> 101%; limit -> 100%; add 100% - 99% = 1%)
@@ -27,7 +27,7 @@ func on_attack(event: Event):
 			item.user_real = item.user_real + 0.02
 	else:
 #		Save current target
-		item.user_int = event.get_target().get_instance_id()
+		item.user_int = event.get_target().get_uid()
 #		Temp variable to store the current bonus
 		item.user_real2 = item.user_real
 #		Calculate the new bonus (Current bonus * (50% + towerlevel%))
