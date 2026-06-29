@@ -464,7 +464,7 @@ text = "Quit to Title"
 [node name="DropPlayersButton" type="Button" parent="PlayersAreLaggingIndicator/PanelContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
-text = "Quit to Title"
+text = "Drop Lagging Players"
 
 [node name="MultiplayerPauseIndicator" parent="." instance=ExtResource("20_cbamn")]
 visible = false
